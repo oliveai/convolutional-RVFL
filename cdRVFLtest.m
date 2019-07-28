@@ -1,8 +1,8 @@
-function y=cdRVFLtest(input,net)
+function out=cdRVFLtest(input,net)
 % cdRVFLtest: ConvNET Random Vector Functional Link testing function
 %
 %Output Parameters
-%         y: actul output
+%         out: actul output
 %
 %Input Parameters
 %         net: structure that includes network parameters.
@@ -13,7 +13,7 @@ function y=cdRVFLtest(input,net)
 %         input=rand(3,25);
 %         target=rand(3,1);
 %         net=cdRVFLtrain(input, target, 5, [8,3])
-%         y=cdRVFLtest(input, net)
+%         out=cdRVFLtest(input, net)
 %        % check target and y values
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % %                           TEST                               %
@@ -32,12 +32,33 @@ for p=1:net.numberofconvlayer-1
     convlayerouts = temp(1:net.pool.stride:end, 1:net.pool.stride:end);
 end
 
-fclayerouts1=batchN(convlayerouts*net.fcweights{1,1}); % FC, Batch Normalization & softmax
+fclayerouts1=batchN(convlayerouts*net.fcweights{1,1}); % FC, Batch Normalization & ReLU
+fclayerouts1=trans(fclayerouts1, 'ReLU'); 
 fclayerouts1(:,net.dropoutlayers)=[]; % dropout layer
-fclayerouts2=trans(batchN(fclayerouts1*net.fcweights{1,2}), 'softmax'); % FC, Batch Normalization & softmax
+fclayerouts2=trans(batchN(fclayerouts1*net.fcweights{1,2}), 'ReLU'); % FC, Batch Normalization & softmax
+%  D=[input, fclayerouts2];
 D=[input, fclayerouts1,fclayerouts2];
-y=D*net.outputlayerweights; 
+y=D*net.outputlayerweights;
+out=outCreate(y);
 end
+
+function out=outCreate(y)
+% create output
+
+outtemp=[];
+for p=1:size(y,1)
+    outtemp=[outtemp; y(p,:)==max(y(p,:))];
+end
+clear y
+
+out=zeros(size(outtemp,1), 1);
+for pp=1:size(outtemp,2)
+    out=out+outtemp(:,pp)*pp;
+end
+end
+
+
+
 
 
 

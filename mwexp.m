@@ -2,9 +2,9 @@
 
 clear all
 % Example Usage
-input=rand(3,25);
-target=rand(3,1);
-net=cdRVFLtrain(input, target, 5, [10,5]);
+input=rand(3,10);
+target=[1 ;2 ; 3];
+net=cdRVFLtrain(input, target, 3, [10,5]);
 y=cdRVFLtest(input, net)
 % check target and y values
 
@@ -18,7 +18,7 @@ traindata=[meas(1:40,:); meas(51:90,:); meas(101:140,:)];
 testlabel=[ones(1,10), 2*ones(1,10), 3*ones(1,10)]';
 testdata=[meas(41:50,:); meas(91:100,:); meas(141:150,:)];
 
-tic, net=cdRVFLtrain(traindata, trainlabel, 1, [50 10]);toc
+tic, net=cdRVFLtrain(traindata, trainlabel, 1, [20 10]);toc
 y=cdRVFLtest(testdata, net);
 
 

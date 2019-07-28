@@ -59,6 +59,8 @@ Y=1.7159*tanh(2/3.*x);
 % Y=(exp(x)-exp(-x))./(exp(x)+exp(-x));
 
 function Y=softmax(x)
+% softmax Matlab kütüphanede mevcut
+
 shiftx = x - max(x);
 exps = exp(shiftx);
 Y=(exps)./sum(exps);
