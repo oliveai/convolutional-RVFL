@@ -49,7 +49,6 @@ else
     fclayerouts1(:,net.dropoutlayers)=[];% dropout layer
     net.fcweights{1,2}=rand( size(fclayerouts1, 2),fclayerstructure(2));
     fclayerouts2=trans(batchN(fclayerouts1*net.fcweights{1,2}), 'ReLU'); % FC, Batch Normalization & softmax
-%      D=[input, fclayerouts2];
     D=[input, fclayerouts1, fclayerouts2];
     net.outputlayerweights=pinv(D)*target; % Pseudoinverse learning, svd
 end

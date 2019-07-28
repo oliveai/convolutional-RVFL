@@ -10,11 +10,12 @@ function out=cdRVFLtest(input,net)
 %         outputlayerweights, fclayerstructure, numberofconvlayer
 %
 % Example Usage
-%         input=rand(3,25);
-%         target=rand(3,1);
-%         net=cdRVFLtrain(input, target, 5, [8,3])
-%         out=cdRVFLtest(input, net)
-%        % check target and y values
+% clearvars,
+% input=rand(18,50);
+% target=[ones(1,6), ones(1,6)*2, ones(1,6)*3]';
+% net=cdRVFLtrain(input, target, 5, [8,3]);
+% out=cdRVFLtest(input, net) % check target and y values
+%
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % %                           TEST                               %
 % %           ConvNET Random Vector Functional Link              %
@@ -36,7 +37,6 @@ fclayerouts1=batchN(convlayerouts*net.fcweights{1,1}); % FC, Batch Normalization
 fclayerouts1=trans(fclayerouts1, 'ReLU'); 
 fclayerouts1(:,net.dropoutlayers)=[]; % dropout layer
 fclayerouts2=trans(batchN(fclayerouts1*net.fcweights{1,2}), 'ReLU'); % FC, Batch Normalization & softmax
-%  D=[input, fclayerouts2];
 D=[input, fclayerouts1,fclayerouts2];
 y=D*net.outputlayerweights;
 out=outCreate(y);
